@@ -1,0 +1,321 @@
+
+--[[
+    ANIME PHANTOM X
+    MM2 HALLOWEEN EDITION
+    Created by: Javonte Grant
+    Version: 1.0
+    Status: Work In Progress
+
+    Please use it wisely.
+]]
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+local Purple = Color3.fromRGB(145, 70, 255)
+local Dark = Color3.fromRGB(18, 12, 30)
+local White = Color3.fromRGB(255, 255, 255)
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AnimePhantomX"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = PlayerGui
+
+-- LOADING SCREEN
+
+local Loading = Instance.new("Frame")
+Loading.Size = UDim2.new(1, 0, 1, 0)
+Loading.BackgroundColor3 = Dark
+Loading.Parent = ScreenGui
+
+local LoadingTitle = Instance.new("TextLabel")
+LoadingTitle.Size = UDim2.new(1, 0, 0, 80)
+LoadingTitle.Position = UDim2.new(0, 0, 0.35, 0)
+LoadingTitle.BackgroundTransparency = 1
+LoadingTitle.Text = "ANIME PHANTOM X"
+LoadingTitle.TextColor3 = Purple
+LoadingTitle.TextScaled = true
+LoadingTitle.Font = Enum.Font.GothamBlack
+LoadingTitle.Parent = Loading
+
+local LoadingText = Instance.new("TextLabel")
+LoadingText.Size = UDim2.new(1, 0, 0, 35)
+LoadingText.Position = UDim2.new(0, 0, 0.48, 0)
+LoadingText.BackgroundTransparency = 1
+LoadingText.Text = "Loading Halloween Edition..."
+LoadingText.TextColor3 = White
+LoadingText.TextScaled = true
+LoadingText.Parent = Loading
+
+task.wait(5)
+Loading:Destroy()
+
+-- MAIN WINDOW
+
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0, 550, 0, 390)
+Main.Position = UDim2.new(0.5, -275, 0.5, -195)
+Main.BackgroundColor3 = Dark
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = true
+Main.Parent = ScreenGui
+
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 12)
+Corner.Parent = Main
+
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = Purple
+Stroke.Thickness = 2
+Stroke.Parent = Main
+
+-- HEADER
+
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 48)
+Header.BackgroundColor3 = Color3.fromRGB(35, 20, 55)
+Header.BorderSizePixel = 0
+Header.Parent = Main
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(0.7, 0, 1, 0)
+Title.Position = UDim2.new(0, 12, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "ANIME PHANTOM X"
+Title.TextColor3 = White
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 19
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+-- MINIMIZE BUTTON
+
+local Mini = Instance.new("TextButton")
+Mini.Size = UDim2.new(0, 38, 0, 32)
+Mini.Position = UDim2.new(1, -85, 0, 8)
+Mini.Text = "-"
+Mini.TextSize = 25
+Mini.TextColor3 = White
+Mini.BackgroundColor3 = Purple
+Mini.Parent = Header
+
+-- CLOSE BUTTON
+
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.new(0, 38, 0, 32)
+Close.Position = UDim2.new(1, -42, 0, 8)
+Close.Text = "X"
+Close.TextColor3 = White
+Close.BackgroundColor3 = Color3.fromRGB(180, 45, 75)
+Close.Parent = Header
+
+-- MINIMIZED RESTORE BUTTON
+
+local Restore = Instance.new("TextButton")
+Restore.Size = UDim2.new(0, 150, 0, 40)
+Restore.Position = UDim2.new(0, 15, 0.5, 0)
+Restore.Text = "PHANTOM X  +"
+Restore.TextColor3 = White
+Restore.BackgroundColor3 = Purple
+Restore.Visible = false
+Restore.Parent = ScreenGui
+
+Mini.MouseButton1Click:Connect(function()
+    Main.Visible = false
+    Restore.Visible = true
+end)
+
+Restore.MouseButton1Click:Connect(function()
+    Main.Visible = true
+    Restore.Visible = false
+end)
+
+Close.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- SIDEBAR
+
+local Sidebar = Instance.new("Frame")
+Sidebar.Size = UDim2.new(0, 155, 1, -55)
+Sidebar.Position = UDim2.new(0, 0, 0, 50)
+Sidebar.BackgroundColor3 = Color3.fromRGB(27, 18, 42)
+Sidebar.BorderSizePixel = 0
+Sidebar.Parent = Main
+
+local SideLayout = Instance.new("UIListLayout")
+SideLayout.Padding = UDim.new(0, 5)
+SideLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SideLayout.Parent = Sidebar
+
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, -170, 1, -65)
+Content.Position = UDim2.new(0, 165, 0, 58)
+Content.BackgroundTransparency = 1
+Content.Parent = Main
+
+local Pages = {}
+
+local function CreatePage(name)
+    local Page = Instance.new("ScrollingFrame")
+    Page.Name = name
+    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.BackgroundTransparency = 1
+    Page.BorderSizePixel = 0
+    Page.ScrollBarThickness = 4
+    Page.Visible = false
+    Page.Parent = Content
+
+    local Layout = Instance.new("UIListLayout")
+    Layout.Padding = UDim.new(0, 8)
+    Layout.Parent = Page
+
+    Pages[name] = Page
+    return Page
+end
+
+local function AddButton(Page, text, callback)
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(1, -10, 0, 42)
+    Button.BackgroundColor3 = Color3.fromRGB(45, 28, 68)
+    Button.TextColor3 = White
+    Button.Text = text
+    Button.Font = Enum.Font.GothamBold
+    Button.TextSize = 14
+    Button.Parent = Page
+
+    local C = Instance.new("UICorner")
+    C.CornerRadius = UDim.new(0, 8)
+    C.Parent = Button
+
+    Button.MouseButton1Click:Connect(callback or function() end)
+    return Button
+end
+
+local function AddToggle(Page, text)
+    local enabled = false
+
+    local Button = AddButton(Page, text .. ": OFF")
+
+    Button.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        Button.Text = text .. (enabled and ": ON" or ": OFF")
+    end)
+end
+
+local function AddTab(name)
+    local Page = CreatePage(name)
+
+    local Tab = Instance.new("TextButton")
+    Tab.Size = UDim2.new(1, -8, 0, 35)
+    Tab.BackgroundColor3 = Color3.fromRGB(45, 28, 68)
+    Tab.Text = name
+    Tab.TextColor3 = White
+    Tab.Font = Enum.Font.GothamBold
+    Tab.TextSize = 13
+    Tab.Parent = Sidebar
+
+    Tab.MouseButton1Click:Connect(function()
+        for _, OtherPage in pairs(Pages) do
+            OtherPage.Visible = false
+        end
+
+        Page.Visible = true
+    end)
+
+    return Page
+end
+
+-- ESP
+
+local ESP = AddTab("ESP")
+AddToggle(ESP, "Player ESP")
+AddToggle(ESP, "Murderer ESP")
+AddToggle(ESP, "Sheriff ESP")
+AddToggle(ESP, "Role Display")
+
+-- SPEED
+
+local Speed = AddTab("SPEED")
+AddButton(Speed, "Speed Controls - UI Only")
+AddButton(Speed, "Reset Speed")
+
+-- AUTO FARM
+
+local Farm = AddTab("AUTO FARM")
+AddButton(Farm, "Auto Farm - Not Implemented")
+AddButton(Farm, "Halloween Collection Status")
+
+-- LOCK ON
+
+local Lock = AddTab("LOCK ON")
+AddToggle(Lock, "Lock On")
+AddButton(Lock, "Unlock Target")
+
+-- PROTECTION
+
+local Protection = AddTab("PROTECTION")
+AddToggle(Protection, "Anti-Fling")
+AddToggle(Protection, "Anti-Lag")
+
+-- FLY + SPEED
+
+local Fly = AddTab("FLY + SPEED")
+AddToggle(Fly, "Fly")
+AddButton(Fly, "Fly Speed Controls - UI Only")
+AddButton(Fly, "Stop Flying")
+
+-- FREE EMOTES
+
+local Emotes = AddTab("FREE EMOTES")
+AddButton(Emotes, "Emote Selector - UI Only")
+AddButton(Emotes, "Stop Emote")
+
+-- SERVER
+
+local Server = AddTab("SERVER")
+AddButton(Server, "Rejoin Current Server", function()
+    game:GetService("TeleportService"):TeleportToPlaceInstance(
+        game.PlaceId,
+        game.JobId,
+        Player
+    )
+end)
+
+-- TROLLING
+
+local Trolling = AddTab("TROLLING")
+AddButton(Trolling, "Fake Kick Notification", function()
+    local Notification = Instance.new("TextLabel")
+    Notification.Size = UDim2.new(0, 300, 0, 60)
+    Notification.Position = UDim2.new(0.5, -150, 0.1, 0)
+    Notification.BackgroundColor3 = Dark
+    Notification.TextColor3 = White
+    Notification.Text = "PHANTOM X: This is a fake kick notification!"
+    Notification.TextScaled = true
+    Notification.Parent = ScreenGui
+
+    task.delay(3, function()
+        Notification:Destroy()
+    end)
+end)
+
+-- ABOUT
+
+local About = AddTab("ABOUT")
+
+AddButton(About, "ANIME PHANTOM X")
+AddButton(About, "Created by: Javonte Grant")
+AddButton(About, "Version: Halloween Edition")
+AddButton(About, "Status: WORK IN PROGRESS")
+AddButton(About, "Please use it wisely.")
+
+-- OPEN FIRST TAB
+
+Pages["ESP"].Visible = true
+
+print("ANIME PHANTOM X loaded successfully!")
